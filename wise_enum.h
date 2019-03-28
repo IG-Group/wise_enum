@@ -25,7 +25,6 @@
 
 // Declare an enum at namespace scope
 #define WISE_ENUM(name, ...) WISE_ENUM_IMPL(enum, name, , __VA_ARGS__)
-
 // Declare an enum class at namespace scope
 #define WISE_ENUM_CLASS(name, ...)                                             \
   WISE_ENUM_IMPL(enum class, name, , __VA_ARGS__)
@@ -100,6 +99,20 @@ WISE_ENUM_CONSTEXPR_14 optional_type<T> from_string(string_type s) {
                    [=](const detail::value_and_name<T> &x) {
                      return ::wise_enum::detail::compare(x.name, s);
                    });
+  if (it == enumerators<T>::range.end())
+    return {};
+
+  return it->value;
+}
+
+template <class T>
+WISE_ENUM_CONSTEXPR_14 optional_type<T> from_number(typename std::underlying_type<T>::type number) {
+  using und_t = typename std::underlying_type<T>::type;
+  const auto it =
+          std::find_if(enumerators<T>::range.begin(), enumerators<T>::range.end(),
+                       [=](const detail::value_and_name<T> &x) {
+                           return static_cast<und_t>(x.value) == number;
+                       });
   if (it == enumerators<T>::range.end())
     return {};
 
