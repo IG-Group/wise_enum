@@ -46,7 +46,13 @@ using string_type = WISE_ENUM_STRING_TYPE;
 
 #if __cplusplus == 201103
 #define WISE_ENUM_CONSTEXPR_14
+#define WISE_ENUM_CONSTEXPR_DISABLE_GCC_4
 #else
+#if __GNUC__ < 5
+#define WISE_ENUM_CONSTEXPR_DISABLE_GCC_4
+#else
+#define WISE_ENUM_CONSTEXPR_DISABLE_GCC_4 constexpr
+#endif
 #define WISE_ENUM_CONSTEXPR_14 constexpr
 #endif
 
@@ -70,7 +76,7 @@ struct is_wise_enum
           bool, !std::is_same<void, decltype(wise_enum_detail_array(
                                         Tag<T>{}))>::value> {};
 
-WISE_ENUM_CONSTEXPR_14 int strcmp(const char *s1, const char *s2) {
+WISE_ENUM_CONSTEXPR_DISABLE_GCC_4 int strcmp(const char *s1, const char *s2) {
   while (*s1 && (*s1 == *s2))
     s1++, s2++;
   if (*s1 < *s2) {
@@ -83,7 +89,7 @@ WISE_ENUM_CONSTEXPR_14 int strcmp(const char *s1, const char *s2) {
   }
 }
 
-WISE_ENUM_CONSTEXPR_14 bool compare(const char *s1, const char *s2) {
+WISE_ENUM_CONSTEXPR_DISABLE_GCC_4 bool compare(const char *s1, const char *s2) {
   return strcmp(s1, s2) == 0;
 }
 
@@ -190,7 +196,7 @@ WISE_ENUM_CONSTEXPR_14 bool compare(U u1, U u2) {
   }                                                                            \
                                                                                \
   template <class T>                                                           \
-  friendly WISE_ENUM_CONSTEXPR_14 ::wise_enum::string_type                     \
+  friendly WISE_ENUM_CONSTEXPR_DISABLE_GCC_4 ::wise_enum::string_type                     \
   wise_enum_detail_to_string(T e, ::wise_enum::detail::Tag<name>) {            \
     switch (e) {                                                               \
       loop(WISE_ENUM_IMPL_SWITCH_CASE, name, WISE_ENUM_IMPL_NOTHING,           \
