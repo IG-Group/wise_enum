@@ -12,12 +12,3 @@ enum class MoreColor
     OLIVE
 };
 WISE_ENUM_ADAPT(MoreColor, RED, GREEN);
-
-TEST_CASE("invalid mapping", "[wise_enum][cxx14][invalid_enumerator]")
-{
-    static_assert(std::is_same<wise_enum::string_type, char const*>::value, "string_type char const* expected for C++14");
-
-    CHECK(wise_enum::to_string(Color{}) == nullptr);
-    CHECK(wise_enum::to_string(static_cast<Color>(42)) == nullptr);
-    CHECK(wise_enum::to_string(MoreColor::OLIVE) == nullptr);
-}
