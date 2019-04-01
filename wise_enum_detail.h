@@ -1,9 +1,10 @@
 #pragma once
 
 #include <array>
-#include <type_traits>
-#include <utility>
 #include <cstdlib>
+#include <type_traits>
+#include <iostream>
+#include <utility>
 
 // optional type needed for interface
 #ifndef WISE_ENUM_OPTIONAL_TYPE
@@ -169,7 +170,8 @@ WISE_ENUM_CONSTEXPR_14 bool compare(U u1, U u2) {
 #define WISE_ENUM_IMPL_2(type, name, storage, friendly, num_enums, ...)        \
   WISE_ENUM_IMPL_3(type, name, storage, friendly, num_enums,                   \
                    WISE_ENUM_IMPL_CAT(WISE_ENUM_IMPL_LOOP_, num_enums),        \
-                   __VA_ARGS__)
+                   __VA_ARGS__)                                                \
+  WISE_ENUM_OSTREAM_OPERATOR(name, friendly)
 
 #define WISE_ENUM_IMPL_3(type, name, storage, friendly, num_enums, loop, ...)  \
   type name storage{                                                           \
@@ -181,9 +183,10 @@ WISE_ENUM_CONSTEXPR_14 bool compare(U u1, U u2) {
   namespace detail {                                                           \
   WISE_ENUM_IMPL_ADAPT_2(name, WISE_ENUM_IMPL_NARG(__VA_ARGS__), __VA_ARGS__)  \
   }                                                                            \
-  }
+  }                                                                            \
+  WISE_ENUM_OSTREAM_OPERATOR(name,)
 
-#define WISE_ENUM_IMPL_ADAPT_2(name, num_enums, ...)                           \
+    #define WISE_ENUM_IMPL_ADAPT_2(name, num_enums, ...)                       \
   WISE_ENUM_IMPL_ADAPT_3(name, , num_enums,                                    \
                          WISE_ENUM_IMPL_CAT(WISE_ENUM_IMPL_LOOP_, num_enums),  \
                          __VA_ARGS__)
@@ -204,5 +207,13 @@ WISE_ENUM_CONSTEXPR_14 bool compare(U u1, U u2) {
            __VA_ARGS__)                                                        \
     }                                                                          \
     std::abort();                                                              \
-    return {};                                                                 \
+  }
+
+#define WISE_ENUM_OSTREAM_OPERATOR(name, friendly)                             \
+  friendly std::ostream&                                                       \
+  operator<<(std::ostream& stream, const name& value) {                        \
+       stream << ::wise_enum::to_string(value)                                 \
+       <<  "(" <<                                                              \
+       static_cast<std::underlying_type<name>::type>(value) << ")";            \
+       return stream;                                                          \
   }

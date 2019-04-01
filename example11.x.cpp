@@ -31,6 +31,9 @@ struct Blub {
 };
 
 int main() {
+    std::cerr << my_lib::Color::GREEN << std::endl;
+    std::cerr << Bar::Foo::BUZ << std::endl;
+    std::cerr << another_lib::SomebodyElse::SECOND << std::endl;
 
   // Number of enumerations:
   static_assert(wise_enum::enumerators<my_lib::Color>::size == 2, "");
