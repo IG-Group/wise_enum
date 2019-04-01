@@ -1,3 +1,4 @@
+#include <boost/optional.hpp>
 #include "wise_enum.h"
 
 #include <cassert>
@@ -50,7 +51,7 @@ int main() {
   std::cerr << wise_enum::to_string(my_lib::Color::RED) << "\n";
 
   // Convert any string to an optional enum
-  auto x1 = wise_enum::from_string<my_lib::Color>("GREEN");
+  boost::optional<my_lib::Color> x1 = wise_enum::from_string<my_lib::Color>("GREEN");
   auto x2 = wise_enum::from_string<my_lib::Color>("Greeeeeeen");
 
   assert(x1.value() == my_lib::Color::GREEN);

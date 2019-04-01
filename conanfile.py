@@ -26,4 +26,4 @@ class WiseEnum(ConanFile):
             cmake.test()
 
     def package(self):
-        self.copy("*.h", dst="", src="")
+        self.copy("*.h", dst="include", src="")
