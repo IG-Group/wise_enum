@@ -15,10 +15,10 @@ template <class T>
 using optional_type = std::optional<T>;
 }
 #else
-#include "optional.h"
+#include <boost/optional.hpp>
 namespace wise_enum {
 template <class T>
-using optional_type = wise_enum::optional<T>;
+using optional_type = boost::optional<T>;
 }
 #endif
 #else

@@ -1,5 +1,4 @@
 #include "wise_enum.h"
-#include "compact_optional.h"
 
 #include <cassert>
 #include <iostream>
