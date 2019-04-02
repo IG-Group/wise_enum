@@ -7,7 +7,6 @@
 namespace my_lib {
 WISE_ENUM(Color, (GREEN, 2), RED)
 }
-
 // Equivalent to enum class MoreColor : int64_t {BLUE, BLACK = 1};
 WISE_ENUM_CLASS((MoreColor, int64_t), BLUE, (BLACK, 1))
 

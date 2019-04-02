@@ -26,8 +26,8 @@ explicitly, declare an enum nested inside a class, or even adapt an already
 declared enum:
 
 ```cpp
-// Equivalent to enum class MoreColor : int64_t {BLUE, BLACK = 1};
-WISE_ENUM_CLASS((MoreColor, int64_t), BLUE, (BLACK, 1))
+// Equivalent to enum class ColorClassAdapted : int64_t {BLUE, BLACK = 1};
+WISE_ENUM_CLASS((ColorClassAdapted, int64_t), BLUE, (BLACK, 1))
 
 // Inside a class, must use a different macro, but still works
 struct Bar {
