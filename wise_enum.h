@@ -106,6 +106,11 @@ WISE_ENUM_CONSTEXPR_14 optional_type<T> from_string(string_type s) {
 }
 
 template <class T>
+optional_type<T> from_string(const std::string& s) {
+  return from_string<T>(s.c_str());
+}
+
+template <class T>
 WISE_ENUM_CONSTEXPR_14 optional_type<T> from_number(typename std::underlying_type<T>::type number) {
   using und_t = typename std::underlying_type<T>::type;
   const auto it =

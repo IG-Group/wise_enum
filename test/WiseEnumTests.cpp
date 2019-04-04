@@ -49,6 +49,12 @@ TYPED_TEST(WiseEnumTest, FromStringCreation) {
     ASSERT_EQ(wise_enum::from_string<EnumType>("OLIVE"), EnumType::OLIVE);
 }
 
+TYPED_TEST(WiseEnumTest, FromStandardStringCreation) {
+    using EnumType = typename TestFixture::EnumType;
+    const std::string RED = "RED";
+    ASSERT_EQ(wise_enum::from_string<EnumType>(RED), EnumType::RED);
+}
+
 TYPED_TEST(WiseEnumTest, ToString) {
     using EnumType = typename TestFixture::EnumType;
     ASSERT_EQ(wise_enum::to_string(EnumType::RED), "RED");
