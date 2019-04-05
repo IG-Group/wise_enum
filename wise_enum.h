@@ -90,19 +90,38 @@ template <class T>
 static constexpr bool is_wise_enum_v = is_wise_enum<T>::value;
 #endif
 
+
+template <class T, class OriginType, class Compare>
+WISE_ENUM_CONSTEXPR_14 optional_type<T> from_type(const OriginType s, Compare compare) {
+    const auto it =
+            std::find_if(enumerators<T>::range.begin(), enumerators<T>::range.end(),
+                         [=](const detail::value_and_name<T> &x) {
+                             return compare(x, s);
+                         });
+    if (it == enumerators<T>::range.end())
+        return {};
+
+    return it->value;
+}
+
+template <class T, class OriginType>
+WISE_ENUM_CONSTEXPR_14 bool string_compare(const detail::value_and_name<T> &x, const OriginType& value)
+{
+    return ::wise_enum::detail::compare(x.name, value);
+}
+
+template <class T, class OriginType>
+WISE_ENUM_CONSTEXPR_14 bool number_compare(const detail::value_and_name<T> &x, const OriginType& value)
+{
+    return static_cast<OriginType>(x.value) == value;
+}
+
+
 // Converts a string literal into a wise enum. Returns an optional<T>; if no
 // enumerator has name matching the string, the optional is returned empty.
 template <class T>
 WISE_ENUM_CONSTEXPR_14 optional_type<T> from_string(string_type s) {
-  auto it =
-      std::find_if(enumerators<T>::range.begin(), enumerators<T>::range.end(),
-                   [=](const detail::value_and_name<T> &x) {
-                     return ::wise_enum::detail::compare(x.name, s);
-                   });
-  if (it == enumerators<T>::range.end())
-    return {};
-
-  return it->value;
+    return from_type<T>(s, string_compare<T, string_type>);
 }
 
 template <class T>
@@ -111,16 +130,7 @@ optional_type<T> from_string(const std::string& s) {
 }
 
 template <class T>
-WISE_ENUM_CONSTEXPR_14 optional_type<T> from_number(typename std::underlying_type<T>::type number) {
-  using und_t = typename std::underlying_type<T>::type;
-  const auto it =
-          std::find_if(enumerators<T>::range.begin(), enumerators<T>::range.end(),
-                       [=](const detail::value_and_name<T> &x) {
-                           return static_cast<und_t>(x.value) == number;
-                       });
-  if (it == enumerators<T>::range.end())
-    return {};
-
-  return it->value;
+WISE_ENUM_CONSTEXPR_14 optional_type<T> from_number(std::underlying_type_t<T> number) {
+    return from_type<T>(number, number_compare<T, std::underlying_type_t<T>>);
 }
 } // namespace wise_enum
