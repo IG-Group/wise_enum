@@ -222,7 +222,7 @@ std::string string_type_to_string(const char *s) { return s; }
         ::wise_enum::to_string(e)));                                           \
     formatted +=                                                               \
         "(" +                                                                  \
-        std::to_string(static_cast<std::underlying_type<name>::type>(e)) +     \
+        std::to_string(static_cast<std::underlying_type_t<name>>(e)) +     \
         ")";                                                                   \
     return formatted;                                                          \
   }

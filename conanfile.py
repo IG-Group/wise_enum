@@ -10,6 +10,8 @@ class WiseEnum(ConanFile):
     version = "0.0.1"
     description = "A reflective enum implementation for C++"
     settings = "os", "compiler", "build_type", "arch", "cppstd"
+    #because it does not seem possible to conditionally set boost:shared in default_options we are always setting it.
+    default_options = "boost:shared=True"
     generators = "cmake"
     build_requires = "gtest/1.8.1@bincrafters/stable"
     exports_sources = "CMakeLists.txt", "*h", "test*"
@@ -18,13 +20,12 @@ class WiseEnum(ConanFile):
         return  "11" in self.settings.cppstd or "14" in self.settings.cppstd
 
     def configure(self):
-        if self.isCpp14Or11():
+        if self.is_cpp_11_or_14():
             self.requires("boost/1.68.0@conan/stable")
-        self.default_options.append("boost:shared=True")
 
     def build(self):
         cmake = CMake(self)
-        if self.isCpp14Or11():
+        if self.is_cpp_11_or_14():
             cmake.definitions["WISE_ENUM_USE_BOOST"] = "ON"
         cmake.configure()
         cmake.build()

@@ -1,6 +1,5 @@
 #include <wise_enum.h>
 
-#include <boost/optional.hpp>
 #include <gtest/gtest.h>
 
 WISE_ENUM(Color, (RED, -1), GREEN, (OLIVE, 5))

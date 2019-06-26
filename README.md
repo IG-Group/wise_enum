@@ -1,7 +1,10 @@
 # wise_enum [![Build Status](https://travis-ci.com/quicknir/wise_enum.svg?branch=master)](https://travis-ci.com/quicknir/wise_enum) [![Build status](https://ci.appveyor.com/api/projects/status/h91ay4xrbsdrq6gk/branch/master?svg=true)](https://ci.appveyor.com/project/quicknir/wise-enum/branch/master)
 
-
 > Because reflection makes you wise, not smart
+
+# IG NOTE:
+Note that this repo is mirrored from github. if you are updating this within ig it might be wise to push your changes
+onto remote.
 
 `wise_enum` is a standalone smart enum library for C++11/14/17. It supports
 all of the standard functionality that you would expect from a smart enum class
