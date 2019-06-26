@@ -47,14 +47,13 @@ using string_type = WISE_ENUM_STRING_TYPE;
 
 #if __cplusplus == 201103
 #define WISE_ENUM_CONSTEXPR_14
-#define WISE_ENUM_CONSTEXPR_DISABLE_GCC_4
 #else
 // gcc <5 doesnt have complete constexpr support
 #if __GNUC__ < 5
 #define WISE_ENUM_CONSTEXPR_14
 #else
-#endif
 #define WISE_ENUM_CONSTEXPR_14 constexpr
+#endif
 #endif
 
 namespace wise_enum {
@@ -221,8 +220,7 @@ std::string string_type_to_string(const char *s) { return s; }
     std::string formatted(::wise_enum::detail::string_type_to_string(          \
         ::wise_enum::to_string(e)));                                           \
     formatted +=                                                               \
-        "(" +                                                                  \
-        std::to_string(static_cast<std::underlying_type_t<name>>(e)) +     \
+        "(" + std::to_string(static_cast<std::underlying_type_t<name>>(e)) +   \
         ")";                                                                   \
     return formatted;                                                          \
   }
