@@ -23,10 +23,12 @@ set(warning_list
 
 add_library(${PROJECT_NAME} INTERFACE)
 
-#todo add if around this:
-target_link_libraries(${PROJECT_NAME} INTERFACE
+if(DEFINED WISE_ENUM_USE_BOOST)
+    target_link_libraries(${PROJECT_NAME} INTERFACE
         CONAN_PKG::boost
         )
+endif()
+
 target_include_directories(${PROJECT_NAME} INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 
 enable_testing()
