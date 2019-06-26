@@ -3,7 +3,6 @@
 #include <array>
 #include <cstdlib>
 #include <type_traits>
-#include <iostream>
 #include <utility>
 
 // optional type needed for interface
@@ -50,10 +49,10 @@ using string_type = WISE_ENUM_STRING_TYPE;
 #define WISE_ENUM_CONSTEXPR_14
 #define WISE_ENUM_CONSTEXPR_DISABLE_GCC_4
 #else
+// gcc <5 doesnt have complete constexpr support
 #if __GNUC__ < 5
-#define WISE_ENUM_CONSTEXPR_DISABLE_GCC_4
+#define WISE_ENUM_CONSTEXPR_14
 #else
-#define WISE_ENUM_CONSTEXPR_DISABLE_GCC_4 constexpr
 #endif
 #define WISE_ENUM_CONSTEXPR_14 constexpr
 #endif
@@ -78,7 +77,7 @@ struct is_wise_enum
           bool, !std::is_same<void, decltype(wise_enum_detail_array(
                                         Tag<T>{}))>::value> {};
 
-WISE_ENUM_CONSTEXPR_DISABLE_GCC_4 int strcmp(const char *s1, const char *s2) {
+inline WISE_ENUM_CONSTEXPR_14 int strcmp(const char *s1, const char *s2) {
   while (*s1 && (*s1 == *s2))
     s1++, s2++;
   if (*s1 < *s2) {
@@ -91,7 +90,7 @@ WISE_ENUM_CONSTEXPR_DISABLE_GCC_4 int strcmp(const char *s1, const char *s2) {
   }
 }
 
-WISE_ENUM_CONSTEXPR_DISABLE_GCC_4 bool compare(const char *s1, const char *s2) {
+inline WISE_ENUM_CONSTEXPR_14 bool compare(const char *s1, const char *s2) {
   return strcmp(s1, s2) == 0;
 }
 
@@ -100,6 +99,15 @@ template <class U, class = typename std::enable_if<
 WISE_ENUM_CONSTEXPR_14 bool compare(U u1, U u2) {
   return u1 == u2;
 }
+
+#if __cplusplus >= 201703L
+std::string string_type_to_string(std::string_view s) {
+  return std::string(s.data());
+}
+#else
+std::string string_type_to_string(const char *s) { return s; }
+#endif
+
 } // namespace detail
 } // namespace wise_enum
 
@@ -170,8 +178,7 @@ WISE_ENUM_CONSTEXPR_14 bool compare(U u1, U u2) {
 #define WISE_ENUM_IMPL_2(type, name, storage, friendly, num_enums, ...)        \
   WISE_ENUM_IMPL_3(type, name, storage, friendly, num_enums,                   \
                    WISE_ENUM_IMPL_CAT(WISE_ENUM_IMPL_LOOP_, num_enums),        \
-                   __VA_ARGS__)                                                \
-  WISE_ENUM_OSTREAM_OPERATOR(name, friendly)
+                   __VA_ARGS__)
 
 #define WISE_ENUM_IMPL_3(type, name, storage, friendly, num_enums, loop, ...)  \
   type name storage{                                                           \
@@ -183,10 +190,9 @@ WISE_ENUM_CONSTEXPR_14 bool compare(U u1, U u2) {
   namespace detail {                                                           \
   WISE_ENUM_IMPL_ADAPT_2(name, WISE_ENUM_IMPL_NARG(__VA_ARGS__), __VA_ARGS__)  \
   }                                                                            \
-  }                                                                            \
-  WISE_ENUM_OSTREAM_OPERATOR(name,)
+  }
 
-    #define WISE_ENUM_IMPL_ADAPT_2(name, num_enums, ...)                       \
+#define WISE_ENUM_IMPL_ADAPT_2(name, num_enums, ...)                           \
   WISE_ENUM_IMPL_ADAPT_3(name, , num_enums,                                    \
                          WISE_ENUM_IMPL_CAT(WISE_ENUM_IMPL_LOOP_, num_enums),  \
                          __VA_ARGS__)
@@ -200,20 +206,23 @@ WISE_ENUM_CONSTEXPR_14 bool compare(U u1, U u2) {
   }                                                                            \
                                                                                \
   template <class T>                                                           \
-  friendly WISE_ENUM_CONSTEXPR_DISABLE_GCC_4 ::wise_enum::string_type                     \
+  friendly WISE_ENUM_CONSTEXPR_14 ::wise_enum::string_type                     \
   wise_enum_detail_to_string(T e, ::wise_enum::detail::Tag<name>) {            \
     switch (e) {                                                               \
       loop(WISE_ENUM_IMPL_SWITCH_CASE, name, WISE_ENUM_IMPL_NOTHING,           \
            __VA_ARGS__)                                                        \
     }                                                                          \
     std::abort();                                                              \
-  }
-
-#define WISE_ENUM_OSTREAM_OPERATOR(name, friendly)                             \
-  friendly std::ostream&                                                       \
-  operator<<(std::ostream& stream, const name& value) {                        \
-       stream << ::wise_enum::to_string(value)                                 \
-       <<  "(" <<                                                              \
-       static_cast<std::underlying_type<name>::type>(value) << ")";            \
-       return stream;                                                          \
+  }                                                                            \
+                                                                               \
+  template <class T>                                                           \
+  friendly WISE_ENUM_CONSTEXPR_14 std::string wise_enum_detail_to_debug_str(   \
+      T e, ::wise_enum::detail::Tag<name>) {                                   \
+    std::string formatted(::wise_enum::detail::string_type_to_string(          \
+        ::wise_enum::to_string(e)));                                           \
+    formatted +=                                                               \
+        "(" +                                                                  \
+        std::to_string(static_cast<std::underlying_type<name>::type>(e)) +     \
+        ")";                                                                   \
+    return formatted;                                                          \
   }

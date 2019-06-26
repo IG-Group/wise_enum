@@ -51,8 +51,7 @@ TYPED_TEST(WiseEnumTest, FromStringCreation) {
 
 TYPED_TEST(WiseEnumTest, FromStandardStringCreation) {
     using EnumType = typename TestFixture::EnumType;
-    const std::string RED = "RED";
-    ASSERT_EQ(wise_enum::from_string<EnumType>(RED), EnumType::RED);
+    ASSERT_EQ(wise_enum::from_string<EnumType>("RED"), EnumType::RED);
 }
 
 TYPED_TEST(WiseEnumTest, ToString) {
@@ -63,9 +62,7 @@ TYPED_TEST(WiseEnumTest, ToString) {
 }
 
 
-TYPED_TEST(WiseEnumTest, TestOstreamOperator) {
+TYPED_TEST(WiseEnumTest, ToDebug) {
     using EnumType = typename TestFixture::EnumType;
-    std::ostringstream stream;
-    stream << EnumType::RED << " " << EnumType::GREEN << " " << EnumType::OLIVE;
-    ASSERT_EQ(stream.str(), "RED(-1) GREEN(0) OLIVE(5)");
+    ASSERT_EQ(wise_enum::to_debug_str(EnumType::RED) + " " + wise_enum::to_debug_str(EnumType::GREEN) + " " + wise_enum::to_debug_str(EnumType::OLIVE), "RED(-1) GREEN(0) OLIVE(5)");
 }

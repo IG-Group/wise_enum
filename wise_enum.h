@@ -52,6 +52,14 @@ constexpr string_type to_string(T t) {
   return wise_enum_detail_to_string(t, detail::Tag<T>{});
 }
 
+// Returns the debug string representation of an enumerator in a form of: 'STRING(NUMBER)'
+// for example for enum Fruit { APPLE = 1} ; to_debug_str would return APPLE(1)
+template <class T>
+std::string to_debug_str(T t) {
+    return wise_enum_detail_to_debug_str(t, detail::Tag<T>{});
+}
+
+
 // Enumerators trait class. Each value is also available as a template variable
 // for C++14 and on
 template <class T>
@@ -122,11 +130,6 @@ WISE_ENUM_CONSTEXPR_14 bool number_compare(const detail::value_and_name<T> &x, c
 template <class T>
 WISE_ENUM_CONSTEXPR_14 optional_type<T> from_string(string_type s) {
     return from_type<T>(s, string_compare<T, string_type>);
-}
-
-template <class T>
-optional_type<T> from_string(const std::string& s) {
-  return from_string<T>(s.c_str());
 }
 
 template <class T>
