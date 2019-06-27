@@ -5,6 +5,21 @@
 # IG NOTE:
 Note that this repo is mirrored from github. if you are updating this within ig it might be wise to push your changes
 onto remote.
+Below is a procedure how to push onto github mirror:
+```
+git remote -v
+#produces output like:
+origin	ssh://git@IG_INTERNAL_IP:PORT/cir/conan-wise-enum.git (fetch)
+origin	ssh://git@IG_INTERNAL_IP:PORT/cir/conan-wise-enum.git (push)
+#okay so we have our bitbucket as a origin, lets add github
+git remote add github https://github.com/IG-Group/wise_enum.git
+#now under alias 'github' you have remote github mirror.
+#lets push everything to github:
+git push origin --all
+git push origin --tags
+#now github mirror is in sync with our internal repo
+
+
 
 `wise_enum` is a standalone smart enum library for C++11/14/17. It supports
 all of the standard functionality that you would expect from a smart enum class
